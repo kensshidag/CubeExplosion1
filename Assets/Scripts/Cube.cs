@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,36 +7,48 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    [SerializeField] private float _explosionForce = 300f;
-    [SerializeField] private float _explosionRadius = 2f;
-    [SerializeField] private float _splitChance = 1f;
+    [SerializeField] private float _splitChance = 1.0f;
+    [field:SerializeField] public float ExplosionForce { get; private set; } = 300f;
+    [field:SerializeField] public float ExplosionRadius { get; private set; } = 2f;
 
     private float _scaleDivider = 2f;
     private float _chanceDivider = 2f;
-    private int _minCubes = 2;
-    private int _maxCubes = 6;
 
-    private List<GameObject> _cubes;
+    private Renderer _renderer;
+
+    public event Action<Cube> CubeSplitRequested;
+    public event Action<Cube> Died;
+
+    private void Awake()
+    {
+        _renderer = GetComponent<Renderer>();
+    }
 
     private void OnMouseDown()
     {
-        float chanceToDestroy = Random.Range(0f, 1f);
-
-        if (chanceToDestroy > _splitChance)
+        if (CanSplit())
         {
-            Destroy(gameObject);
+            CubeSplitRequested?.Invoke(this);
         }
         else
         {
-            _splitChance /= _chanceDivider;
-
-            Destroy(gameObject);
-
-            int cubeSpawnCount = Random.Range(_minCubes, _maxCubes + 1);
-
-            CubeSpawner.cubeSpawner.SpawnCubes(this.gameObject, this.transform.position, transform.localScale / _scaleDivider, cubeSpawnCount, out _cubes);
-
-            Exploder.exploder.Explode(_cubes, _explosionForce, _explosionRadius, this.transform.position);           
+            Died?.Invoke(this);
         }
+
+        Destroy(gameObject);
+    }
+
+    public void InitializeCube()
+    {
+        _splitChance /= _chanceDivider;
+        transform.localScale /= _scaleDivider;
+        _renderer.material.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+    }
+
+    private bool CanSplit()
+    {
+        float randomValue = UnityEngine.Random.value;
+
+        return _splitChance >= randomValue;
     }
 }
