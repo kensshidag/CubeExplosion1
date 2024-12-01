@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(Renderer))]
@@ -9,7 +7,9 @@ public class Cube : MonoBehaviour
 {
     [SerializeField] private float _splitChance = 1.0f;
     [field:SerializeField] public float ExplosionForce { get; private set; } = 300f;
-    [field:SerializeField] public float ExplosionRadius { get; private set; } = 2f;
+    [field:SerializeField] public float ExplosionRadius { get; private set; } = 5f;
+
+    public float CubeStartVolume { get; private set; }
 
     private float _scaleDivider = 2f;
     private float _chanceDivider = 2f;
@@ -22,6 +22,7 @@ public class Cube : MonoBehaviour
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
+        CubeStartVolume = transform.localScale.x * transform.localScale.y * transform.localScale.z;
     }
 
     private void OnMouseDown()
@@ -32,6 +33,7 @@ public class Cube : MonoBehaviour
         }
         else
         {
+            Debug.Log("died");
             Died?.Invoke(this);
         }
 
