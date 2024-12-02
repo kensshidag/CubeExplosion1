@@ -2,25 +2,26 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(Renderer))]
-
 public class Cube : MonoBehaviour
 {
     [SerializeField] private float _splitChance = 1.0f;
-    [field:SerializeField] public float ExplosionForce { get; private set; } = 300f;
-    [field:SerializeField] public float ExplosionRadius { get; private set; } = 5f;
-
-    public float CubeStartVolume { get; private set; }
 
     private float _scaleDivider = 2f;
     private float _chanceDivider = 2f;
-
     private Renderer _renderer;
 
     public event Action<Cube> CubeSplitRequested;
     public event Action<Cube> Died;
 
+    [field:SerializeField] public float ExplosionForce { get; private set; } = 800f;
+    [field:SerializeField] public float ExplosionRadius { get; private set; } = 5f;
+
+    public float CubeStartVolume { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
+
     private void Awake()
     {
+        Rigidbody = GetComponent<Rigidbody>();
         _renderer = GetComponent<Renderer>();
         CubeStartVolume = transform.localScale.x * transform.localScale.y * transform.localScale.z;
     }
@@ -33,14 +34,13 @@ public class Cube : MonoBehaviour
         }
         else
         {
-            Debug.Log("died");
             Died?.Invoke(this);
         }
 
         Destroy(gameObject);
     }
 
-    public void InitializeCube()
+    public void Initialize()
     {
         _splitChance /= _chanceDivider;
         transform.localScale /= _scaleDivider;

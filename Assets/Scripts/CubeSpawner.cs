@@ -14,10 +14,7 @@ public class CubeSpawner : MonoBehaviour
     {
         foreach (var cube in _cubes)
         {
-            Debug.Log(cube.name);
-            Debug.Log("reg");
             cube.Died += ExplodeCube;
-            cube.Died += UnregisterCube;
             cube.CubeSplitRequested += SpawnCubes;
         }
     }
@@ -27,14 +24,12 @@ public class CubeSpawner : MonoBehaviour
         foreach (var cube in _cubes)
         {
             cube.Died -= ExplodeCube;
-            cube.Died -= UnregisterCube;
             cube.CubeSplitRequested -= SpawnCubes;
         }
     }
 
     private void ExplodeCube(Cube cube)
     {
-        Debug.Log(cube.name);
         _exploder.ExplodeAround(cube);
         UnregisterCube(cube);
     }
@@ -45,12 +40,12 @@ public class CubeSpawner : MonoBehaviour
 
         int cubesToSpawn = Random.Range(_minCubes, _maxCubes + 1);
 
-        List<Cube> cubesToExplode = new List<Cube>();
+        List<Cube> cubesToExplode = new();
 
         for (int i = 0; i < cubesToSpawn; i++)
         {
             Cube newCube = Instantiate(cube, cube.transform.position, Quaternion.identity);
-            newCube.InitializeCube();
+            newCube.Initialize();
             newCube.Died += UnregisterCube;
             newCube.Died += ExplodeCube;
             newCube.CubeSplitRequested += SpawnCubes;
@@ -63,7 +58,6 @@ public class CubeSpawner : MonoBehaviour
 
     private void UnregisterCube(Cube cube)
     {
-        cube.Died -= UnregisterCube;
         cube.Died -= ExplodeCube;
         cube.CubeSplitRequested -= SpawnCubes;
         _cubes.Remove(cube);

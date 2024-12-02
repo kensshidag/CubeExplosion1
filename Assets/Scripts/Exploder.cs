@@ -7,10 +7,7 @@ public class Exploder : MonoBehaviour
     {
         foreach (Cube cube in cubes)
         {
-            if (cube.TryGetComponent(out Rigidbody cubeRigidbody))
-            {
-                cubeRigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
-            }
+            cube.Rigidbody.AddExplosionForce(explosionForce, explosionPosition, explosionRadius);
         }
     }
 
@@ -18,15 +15,18 @@ public class Exploder : MonoBehaviour
     {
         float cubeVolume = cube.transform.localScale.x * cube.transform.localScale.y * cube.transform.localScale.z;
         float multiplier = cubeVolume / cube.CubeStartVolume + 1;
+        List<Cube> cubes = new();
 
         Collider[] colliders = Physics.OverlapSphere(cube.transform.position, cube.ExplosionRadius * multiplier);
 
         foreach (Collider collider in colliders)
         {
-            if (collider.TryGetComponent(out Rigidbody rigidbody))
+            if (collider.TryGetComponent(out Cube newCube))
             {
-                rigidbody.AddExplosionForce(cube.ExplosionForce * multiplier, cube.transform.position, cube.ExplosionRadius * multiplier);
-            }                    
+                cubes.Add(newCube);
+            }
         }
+
+        Explode(cubes, cube.ExplosionForce * multiplier, cube.ExplosionRadius * multiplier, cube.transform.position);
     }
 }

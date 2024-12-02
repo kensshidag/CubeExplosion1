@@ -851,6 +851,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -3625507158487578976, guid: d52d6326478aa2c4495e9fc3672b008a, type: 3}
+      propertyPath: <ExplosionForce>k__BackingField
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: -3625507158487578976, guid: d52d6326478aa2c4495e9fc3672b008a, type: 3}
+      propertyPath: <ExplosionRadius>k__BackingField
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6058995580904297034, guid: d52d6326478aa2c4495e9fc3672b008a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.8
