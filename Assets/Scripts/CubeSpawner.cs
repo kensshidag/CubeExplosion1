@@ -15,7 +15,7 @@ public class CubeSpawner : MonoBehaviour
         foreach (var cube in _cubes)
         {
             cube.Died += ExplodeCube;
-            cube.CubeSplitRequested += SpawnCubes;
+            cube.SplitRequested += SpawnCubes;
         }
     }
 
@@ -24,7 +24,7 @@ public class CubeSpawner : MonoBehaviour
         foreach (var cube in _cubes)
         {
             cube.Died -= ExplodeCube;
-            cube.CubeSplitRequested -= SpawnCubes;
+            cube.SplitRequested -= SpawnCubes;
         }
     }
 
@@ -46,9 +46,8 @@ public class CubeSpawner : MonoBehaviour
         {
             Cube newCube = Instantiate(cube, cube.transform.position, Quaternion.identity);
             newCube.Initialize();
-            newCube.Died += UnregisterCube;
             newCube.Died += ExplodeCube;
-            newCube.CubeSplitRequested += SpawnCubes;
+            newCube.SplitRequested += SpawnCubes;
             _cubes.Add(newCube);
             cubesToExplode.Add(newCube);
         }  
@@ -59,7 +58,7 @@ public class CubeSpawner : MonoBehaviour
     private void UnregisterCube(Cube cube)
     {
         cube.Died -= ExplodeCube;
-        cube.CubeSplitRequested -= SpawnCubes;
+        cube.SplitRequested -= SpawnCubes;
         _cubes.Remove(cube);
     }
 }

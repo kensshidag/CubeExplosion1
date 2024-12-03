@@ -14,7 +14,7 @@ public class Exploder : MonoBehaviour
     public void ExplodeAround(Cube cube)
     {
         float cubeVolume = cube.transform.localScale.x * cube.transform.localScale.y * cube.transform.localScale.z;
-        float multiplier = cubeVolume / cube.CubeStartVolume + 1;
+        float multiplier = cubeVolume / cube.StartVolume + 1;
         List<Cube> cubes = new();
 
         Collider[] colliders = Physics.OverlapSphere(cube.transform.position, cube.ExplosionRadius * multiplier);
